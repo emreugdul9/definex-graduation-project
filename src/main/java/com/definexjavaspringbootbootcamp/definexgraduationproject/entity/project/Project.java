@@ -39,7 +39,7 @@ public class Project {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
-    private boolean isActive;
+    private boolean isDeleted = Boolean.FALSE;
     private LocalDate created;
     private LocalDate updated;
 }

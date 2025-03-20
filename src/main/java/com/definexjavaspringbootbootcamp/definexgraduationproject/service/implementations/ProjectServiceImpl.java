@@ -33,7 +33,8 @@ public class ProjectServiceImpl implements ProjectService {
         this.projectMapper = projectMapper;
     }
 
-    @PreAuthorize("hasAuthority('PROJECT_MANAGER') and @securityService.isUserInSameDepartment(#id)")
+    //TODO: belki bu da sadece eğer aynı departmen içindeyse getiren bi metod olabilir
+    @PreAuthorize("hasAuthority('PROJECT_MANAGER') and @securityService.isUserAndProjectSameDepartment(#id)")
     @Override
     public Project findById(UUID id) {
         return projectRepository.findById(id).orElseThrow(() -> new ProjectNotFoundException("Project not found"));
@@ -64,7 +65,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
     //TODO: addUserToProject, addTaskToProject
 
-    @PreAuthorize("hasAuthority('PROJECT_MANAGER') and @securityService.isUserInSameDepartment(#projectId)")
+    @PreAuthorize("hasAuthority('PROJECT_MANAGER') and @securityService.isUserAndProjectSameDepartment(#projectId)")
     @Override
     public ProjectResponse addTaskToProject(UUID projectId, List<UUID> taskIds) {
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("Project not found"));
@@ -81,7 +82,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .build();
     }
 
-    @PreAuthorize("hasAuthority('PROJECT_MANAGER') and @securityService.isUserInSameDepartment(#projectId)")
+    @PreAuthorize("hasAuthority('PROJECT_MANAGER') and @securityService.isUserAndProjectSameDepartment(#projectId)")
     @Override
     public ProjectResponse addUserToProject(UUID projectId, List<UUID> userIds) {
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("Project not found"));
@@ -99,7 +100,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     //TODO: düzelt
-    @PreAuthorize("hasAuthority('PROJECT_MANAGER') and @securityService.isUserInSameDepartment(#id)")
+    @PreAuthorize("hasAuthority('PROJECT_MANAGER') and @securityService.isUserAndProjectSameDepartment(#id)")
     @Override
     public Project update(UUID id, ProjectDto projectDto) {
         Project project = projectRepository.findById(id).orElseThrow(() -> new ProjectNotFoundException("Project not found"));
@@ -107,11 +108,11 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.save(project);
     }
 
-    @PreAuthorize("hasAuthority('PROJECT_MANAGER') and @securityService.isUserInSameDepartment(#id)")
+    @PreAuthorize("hasAuthority('PROJECT_MANAGER') and @securityService.isUserAndProjectSameDepartment(#id)")
     @Override
     public Project delete(UUID id) {
         Project deletedProject = projectRepository.findById(id).orElseThrow(() -> new ProjectNotFoundException("Project not found"));
-        projectRepository.delete(deletedProject);
+        deletedProject.setDeleted(true);
         return deletedProject;
     }
 

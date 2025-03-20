@@ -3,6 +3,7 @@ package com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.attachment.Attachment;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.comment.Comment;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.Project;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +31,9 @@ public class Task {
     private TaskState state;
     @Enumerated(EnumType.STRING)
     private TaskPriority priority;
-    private String assignee;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User assignee;
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     private List<Comment> comments;
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)

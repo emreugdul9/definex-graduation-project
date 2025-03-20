@@ -27,13 +27,11 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasAuthority('TEAM_LEADER') or hasAuthority('PROJECT_MANAGER')")
     public ResponseEntity<TaskResponse> create(@RequestBody TaskDto taskDto) {
         return ResponseEntity.ok(taskService.create(taskDto));
     }
 
     @GetMapping("/exist/{id}")
-    @PreAuthorize("hasAuthority('TEAM_LEADER')")
     public ResponseEntity<Boolean> exist(@PathVariable UUID id) {
         return ResponseEntity.ok(taskService.doesTaskExist(id));
     }

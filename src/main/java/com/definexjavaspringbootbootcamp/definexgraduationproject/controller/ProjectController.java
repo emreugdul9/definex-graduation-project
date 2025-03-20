@@ -15,7 +15,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/project")
 @AllArgsConstructor
-@PreAuthorize("hasAuthority('PROJECT_MANAGER') or hasAuthority('TEAM_LEADER')")
+@PreAuthorize("hasAuthority('PROJECT_MANAGER')")
 public class ProjectController {
 
     private final ProjectService projectService;

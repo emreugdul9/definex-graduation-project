@@ -1,5 +1,6 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.dto;
 
+import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -14,7 +15,7 @@ public class TaskResponse extends Response {
 
     private String title;
     private String description;
-    private String assignee;
+    private User assignee;
     private LocalDate created;
 
 }

@@ -3,11 +3,14 @@ import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.*;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskPriority;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskState;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.exception.ReasonMustBeEntered;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.exception.TaskNotFoundException;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.mapper.TaskMapper;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.TaskRepository;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.service.TaskService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,14 +24,17 @@ import java.util.UUID;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
+    private final TaskMapper taskMapper;
 
     @Override
+    @PreAuthorize("@securityService.isUserAndTaskSameDepartment(#id)")
     public Task findById(UUID id) {
         return taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found"));
     }
 
     @Override
     @Transactional
+    @PreAuthorize("(hasAuthority('TEAM_LEADER') or hasAuthority('PROJECT_MANAGER'))")
     public TaskResponse create(TaskDto taskDto) {
         Task task = Task.builder()
                 .title(taskDto.getTitle())
@@ -41,39 +47,42 @@ public class TaskServiceImpl implements TaskService {
                 .updated(LocalDate.now())
                 .build();
         taskRepository.save(task);
-        TaskResponse response = TaskResponse.builder()
+        return TaskResponse.builder()
                 .assignee(task.getAssignee())
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .created(task.getCreated())
+                .message("Task created successfully")
                 .build();
-        response.setMessage("Task created successfully");
-        return response;
     }
 
     @Override
     @Transactional
-    public Task update(UUID id, Task task) {
+    @PreAuthorize("(hasAuthority('TEAM_LEADER') or hasAuthority('PROJECT_MANAGER')) and @securityService.isUserAndTaskSameDepartment(#id)")
+    public Task update(UUID id, TaskUpdateDto taskUpdateDto) {
         Task taskToUpdate = findById(id);
-        task.setId(taskToUpdate.getId());
-        return taskRepository.save(task);
+        taskMapper.updateTaskFromDto(taskUpdateDto, taskToUpdate);
+        return taskRepository.save(taskToUpdate);
     }
 
     @Override
     @Transactional
-    public Task delete(UUID id) {
+    @PreAuthorize("(hasAuthority('TEAM_LEADER') or hasAuthority('PROJECT_MANAGER')) and @securityService.isUserAndTaskSameDepartment(#id)")
+    public String delete(UUID id) {
         Task taskToDelete = findById(id);
-        taskRepository.delete(taskToDelete);
-        return taskToDelete;
+        taskToDelete.setDeleted(true);
+        return "Task deleted successfully";
     }
 
     @Override
+    @PreAuthorize("(hasAuthority('TEAM_LEADER') or hasAuthority('PROJECT_MANAGER')) and @securityService.isUserAndProjectSameDepartment(#projectId)")
     public List<Task> getTasksByProjectId(UUID projectId) {
         return taskRepository.findTasksByProjectId(projectId);
     }
 
     @Override
     @Transactional
+    @PreAuthorize("@securityService.isUserAndTaskSameDepartment(#taskId)")
     public ChangeStateResponse changeTaskState(UUID taskId, TaskState state, String reason) {
         Task task = findById(taskId);
         if((state == TaskState.CANCELLED || state == TaskState.BLOCKED) && reason == null) {
@@ -91,16 +100,16 @@ public class TaskServiceImpl implements TaskService {
             }
         }
         task.setState(state);
-        this.update(taskId,task);
-        ChangeStateResponse changeStateResponse = ChangeStateResponse.builder()
+        taskRepository.save(task);
+        return ChangeStateResponse.builder()
                 .reason(reason)
+                .message("State changed to " + state)
                 .build();
-        changeStateResponse.setMessage("State changed to " + state);
-        return changeStateResponse;
     }
 
     @Override
     @Transactional
+    @PreAuthorize("(hasAuthority('TEAM_LEADER') or hasAuthority('PROJECT_MANAGER')) and @securityService.isUserAndTaskSameDepartment(#taskId)")
     public ChangePriortyResponse changeTaskPriority(UUID taskId, TaskPriority priority){
         Task task = findById(taskId);
         task.setPriority(priority);
@@ -113,25 +122,26 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
+    @PreAuthorize("(hasAuthority('TEAM_LEADER') or hasAuthority('PROJECT_MANAGER')) and @securityService.isUserAndTaskSameDepartment(#taskId)")
     public TaskAssignedResponse assignTask(UUID taskId, UUID userId) {
         Task task = findById(taskId);
-        task.setAssignee(userId.toString());
-        this.update(taskId,task);
-        TaskAssignedResponse taskAssignedResponse = TaskAssignedResponse.builder()
+        task.setAssignee(User.builder().id(userId).build());
+        taskRepository.save(task);
+        return TaskAssignedResponse.builder()
                 .taskId(taskId)
                 .userId(userId)
+                .message("Assigned task" + taskId + " to user " + userId)
                 .build();
-        taskAssignedResponse.setMessage("Assigned task " + taskId + " to user " + userId);
-        return taskAssignedResponse;
     }
 
     @Override
+    @PreAuthorize("(hasAuthority('TEAM_LEADER') or hasAuthority('PROJECT_MANAGER')) and @securityService.isUserAndTaskSameDepartment(#taskId)")
     public TaskState getTaskState(UUID taskId) {
-        Task task = findById(taskId);
-        return task.getState();
+        return taskRepository.findTaskStateById(taskId);
     }
 
     @Override
+    @PreAuthorize("(hasAuthority('TEAM_LEADER') or hasAuthority('PROJECT_MANAGER')) and @securityService.isUserAndTaskSameDepartment(#taskId)")
     public boolean doesTaskExist(UUID taskId) {
         return taskRepository.existsById(taskId);
     }

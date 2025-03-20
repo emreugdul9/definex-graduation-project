@@ -2,6 +2,7 @@ package com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user;
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.department.Department;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.Project;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,6 +37,8 @@ public class User implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
+    @OneToMany(mappedBy = "assignee")
+    private List<Task> tasks;
 
 
     @Override

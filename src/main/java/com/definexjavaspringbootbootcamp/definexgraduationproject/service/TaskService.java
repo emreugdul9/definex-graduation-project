@@ -12,8 +12,8 @@ public interface TaskService {
 
     Task findById(UUID id);
     TaskResponse create(TaskDto taskDto);
-    Task update(UUID id, Task task);
-    Task delete(UUID id);
+    Task update(UUID id, TaskUpdateDto taskUpdateDto);
+    String delete(UUID id);
     List<Task> getTasksByProjectId(UUID projectId);
     ChangeStateResponse changeTaskState(UUID taskId, TaskState state, String reason);
     ChangePriortyResponse changeTaskPriority(UUID taskId, TaskPriority priority);

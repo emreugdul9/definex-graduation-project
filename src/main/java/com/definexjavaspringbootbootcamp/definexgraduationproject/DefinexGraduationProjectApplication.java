@@ -7,7 +7,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 
 @SpringBootApplication
 @EnableWebSecurity
-@ComponentScan(basePackages = "com.definexjavaspringbootbootcamp.definexgraduationproject.mapper")
+@ComponentScan(basePackages = {"com.definexjavaspringbootbootcamp.definexgraduationproject.mapper",
+        "com.definexjavaspringbootbootcamp.definexgraduationproject.service",
+        "com.definexjavaspringbootbootcamp.definexgraduationproject.repository"})
 public class DefinexGraduationProjectApplication {
 
     public static void main(String[] args) {

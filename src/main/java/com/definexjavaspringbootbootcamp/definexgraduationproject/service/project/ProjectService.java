@@ -10,11 +10,11 @@ import java.util.UUID;
 public interface ProjectService {
 
     Project findById(UUID id);
-    List<Project> findAll();
+    List<Project> findAllByDepartment();
     Project create(ProjectDto projectDto);
     Project update(UUID id, ProjectDto projectDto);
     Project delete(UUID id);
-    ProjectResponse addTaskToProject(UUID projectId, UUID taskId);
-    ProjectResponse addUserToProject(UUID projectId, UUID userId);
+    ProjectResponse addTaskToProject(UUID projectId, List<UUID> taskId);
+    ProjectResponse addUserToProject(UUID projectId, List<UUID> userId);
 
 }

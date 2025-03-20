@@ -1,6 +1,7 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.entity.department;
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.Project;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,4 +22,6 @@ public class Department {
 
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
     private List<Project> projects;
+    @OneToMany(mappedBy = "department")
+    private List<User> users;
 }

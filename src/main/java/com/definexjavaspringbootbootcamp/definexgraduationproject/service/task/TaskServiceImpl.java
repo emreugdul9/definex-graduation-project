@@ -1,20 +1,16 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.service.task;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ChangeStateResponse;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.TaskAssignedResponse;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.TaskDto;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.TaskResponse;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.*;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskPriority;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskState;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.exception.ReasonMustBeEntered;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.exception.TaskNotFoundException;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.task.TaskRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -101,6 +97,18 @@ public class TaskServiceImpl implements TaskService {
                 .build();
         changeStateResponse.setMessage("State changed to " + state);
         return changeStateResponse;
+    }
+
+    @Override
+    @Transactional
+    public ChangePriortyResponse changeTaskPriority(UUID taskId, TaskPriority priority){
+        Task task = findById(taskId);
+        task.setPriority(priority);
+        taskRepository.save(task);
+        return ChangePriortyResponse.builder()
+                .priority(priority)
+                .message("Priority changed to " + priority)
+                .build();
     }
 
     @Override

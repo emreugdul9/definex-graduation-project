@@ -1,10 +1,8 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.service.task;
 
-import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ChangeStateResponse;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.TaskAssignedResponse;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.TaskDto;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.TaskResponse;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.*;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskPriority;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskState;
 
 import java.util.List;
@@ -18,6 +16,7 @@ public interface TaskService {
     Task delete(UUID id);
     List<Task> getTasksByProjectId(UUID projectId);
     ChangeStateResponse changeTaskState(UUID taskId, TaskState state, String reason);
+    ChangePriortyResponse changeTaskPriority(UUID taskId, TaskPriority priority);
     TaskAssignedResponse assignTask(UUID taskId, UUID userId);
     TaskState getTaskState(UUID taskId);
     boolean doesTaskExist(UUID taskId);

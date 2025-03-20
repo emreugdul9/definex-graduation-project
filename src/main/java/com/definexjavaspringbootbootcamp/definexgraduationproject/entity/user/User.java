@@ -1,6 +1,6 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user;
 
-
+import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.Project;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +30,8 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserType userType;
+    @ManyToMany(mappedBy = "users")
+    private List<Project> project;
 
 
     @Override

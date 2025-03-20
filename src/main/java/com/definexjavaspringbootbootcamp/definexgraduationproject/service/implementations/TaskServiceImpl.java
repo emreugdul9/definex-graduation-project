@@ -1,17 +1,17 @@
-package com.definexjavaspringbootbootcamp.definexgraduationproject.service.task;
+package com.definexjavaspringbootbootcamp.definexgraduationproject.service.implementations;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.*;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskPriority;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskState;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.exception.ReasonMustBeEntered;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.exception.TaskNotFoundException;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.task.TaskRepository;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.TaskRepository;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.service.TaskService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 

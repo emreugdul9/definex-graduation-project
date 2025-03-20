@@ -1,11 +1,12 @@
-package com.definexjavaspringbootbootcamp.definexgraduationproject.service.comment;
+package com.definexjavaspringbootbootcamp.definexgraduationproject.service.implementations;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.CommentDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.CommentResponse;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.comment.Comment;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.exception.TaskNotFoundException;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.comment.CommentRepository;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.service.task.TaskService;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.CommentRepository;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.service.CommentService;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.service.TaskService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

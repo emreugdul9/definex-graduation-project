@@ -1,4 +1,4 @@
-package com.definexjavaspringbootbootcamp.definexgraduationproject.service.attachment;
+package com.definexjavaspringbootbootcamp.definexgraduationproject.service;
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.AttachmentDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.AttachmentResponse;

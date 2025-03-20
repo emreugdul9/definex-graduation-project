@@ -1,4 +1,4 @@
-package com.definexjavaspringbootbootcamp.definexgraduationproject.service.user;
+package com.definexjavaspringbootbootcamp.definexgraduationproject.service;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
 
 import java.util.UUID;

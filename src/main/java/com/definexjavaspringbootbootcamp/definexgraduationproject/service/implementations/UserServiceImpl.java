@@ -1,8 +1,9 @@
-package com.definexjavaspringbootbootcamp.definexgraduationproject.service.user;
+package com.definexjavaspringbootbootcamp.definexgraduationproject.service.implementations;
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.exception.UserNotFoundException;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.user.UserRepository;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.UserRepository;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

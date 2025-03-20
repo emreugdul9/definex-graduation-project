@@ -1,10 +1,10 @@
-package com.definexjavaspringbootbootcamp.definexgraduationproject.service;
+package com.definexjavaspringbootbootcamp.definexgraduationproject.service.implementations;
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.Project;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.exception.ProjectNotFoundException;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.project.ProjectRepository;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.user.UserRepository;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.ProjectRepository;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

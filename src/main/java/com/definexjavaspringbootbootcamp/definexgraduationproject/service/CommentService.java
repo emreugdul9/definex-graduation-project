@@ -1,4 +1,4 @@
-package com.definexjavaspringbootbootcamp.definexgraduationproject.service.comment;
+package com.definexjavaspringbootbootcamp.definexgraduationproject.service;
 
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.CommentDto;

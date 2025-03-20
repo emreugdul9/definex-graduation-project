@@ -1,6 +1,6 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.configuration;
 
-import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.user.UserRepository;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.UserRepository;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.utils.JwtUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;

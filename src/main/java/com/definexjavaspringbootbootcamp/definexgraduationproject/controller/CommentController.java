@@ -2,7 +2,7 @@ package com.definexjavaspringbootbootcamp.definexgraduationproject.controller;
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.CommentDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.CommentResponse;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.service.comment.CommentService;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.service.CommentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -2,7 +2,7 @@ package com.definexjavaspringbootbootcamp.definexgraduationproject.controller;
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.AttachmentDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.AttachmentResponse;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.service.attachment.AttachmentService;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.service.AttachmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

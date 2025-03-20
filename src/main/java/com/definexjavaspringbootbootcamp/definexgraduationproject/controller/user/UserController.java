@@ -3,7 +3,7 @@ package com.definexjavaspringbootbootcamp.definexgraduationproject.controller.us
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.userdto.AuthRequestDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.userdto.AuthResponseDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.service.user.UserService;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.service.UserService;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.utils.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

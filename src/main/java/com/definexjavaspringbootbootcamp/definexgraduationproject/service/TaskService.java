@@ -1,4 +1,4 @@
-package com.definexjavaspringbootbootcamp.definexgraduationproject.service.task;
+package com.definexjavaspringbootbootcamp.definexgraduationproject.service;
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.*;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;

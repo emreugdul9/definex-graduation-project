@@ -3,7 +3,7 @@ package com.definexjavaspringbootbootcamp.definexgraduationproject.controller;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectResponse;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.Project;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.service.project.ProjectService;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.service.ProjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

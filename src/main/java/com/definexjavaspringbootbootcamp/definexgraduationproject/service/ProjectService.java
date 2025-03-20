@@ -1,4 +1,4 @@
-package com.definexjavaspringbootbootcamp.definexgraduationproject.service.project;
+package com.definexjavaspringbootbootcamp.definexgraduationproject.service;
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectResponse;

@@ -6,7 +6,7 @@ import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.TaskRespon
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskPriority;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskState;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.service.task.TaskService;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.service.TaskService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

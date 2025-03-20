@@ -1,4 +1,4 @@
-package com.definexjavaspringbootbootcamp.definexgraduationproject.service.project;
+package com.definexjavaspringbootbootcamp.definexgraduationproject.service.implementations;
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectResponse;
@@ -8,9 +8,9 @@ import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Ta
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.exception.ProjectNotFoundException;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.mapper.ProjectMapper;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.project.ProjectRepository;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.ProjectRepository;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.UserRepository;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.service.ProjectService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectMapper projectMapper;
 
-    @Autowired
     public ProjectServiceImpl(ProjectRepository projectRepository, UserRepository userRepository, ProjectMapper projectMapper) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;

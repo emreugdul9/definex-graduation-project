@@ -1,4 +1,4 @@
-package com.definexjavaspringbootbootcamp.definexgraduationproject.service.attachment;
+package com.definexjavaspringbootbootcamp.definexgraduationproject.service.implementations;
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.AttachmentDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.AttachmentResponse;
@@ -6,8 +6,9 @@ import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.attachm
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.exception.AttachmentNotFoundException;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.exception.TaskNotFoundException;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.attachment.AttachmentRepository;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.service.task.TaskService;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.AttachmentRepository;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.service.AttachmentService;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.service.TaskService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

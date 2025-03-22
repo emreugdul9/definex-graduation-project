@@ -49,9 +49,4 @@ public class ProjectController {
     public ResponseEntity<ProjectResponse> addUserToProject(@PathVariable UUID projectId, @RequestBody List<UUID> userIds) {
         return ResponseEntity.ok(projectService.addUserToProject(projectId, userIds));
     }
-
-    @PutMapping("/add-task/{projectId}")
-    public ResponseEntity<ProjectResponse> addTaskToProject(@PathVariable UUID projectId, @RequestBody List<UUID> taskIds) {
-        return ResponseEntity.ok(projectService.addTaskToProject(projectId, taskIds));
-    }
 }

@@ -1,5 +1,6 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.service.implementations;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.*;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.Project;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskPriority;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskState;
@@ -42,7 +43,7 @@ public class TaskServiceImpl implements TaskService {
                 .acceptanceCriteria(taskDto.getAcceptanceCriteria())
                 .state(TaskState.BACKLOG)
                 .priority(taskDto.getPriority())
-                .assignee(taskDto.getAssignee())
+                .project(Project.builder().id(taskDto.getProject()).build())
                 .created(LocalDate.now())
                 .updated(LocalDate.now())
                 .build();

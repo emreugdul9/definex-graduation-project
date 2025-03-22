@@ -127,15 +127,21 @@
                         </goals>
                         <configuration>
                             <excludes>
-                                <exclude>**/dto/**</exclude>
-                                <exclude>**/entity/**</exclude>
-                                <exclude>**/exception/**</exclude>
-                                <exclude>**/configuration/**</exclude>
+                                <exclude>**/dto.*</exclude>
+                                <exclude>**/exception.*</exclude>
+                                <exclude>**/entity/*.*</exclude>
+                                <exclude>**/configuration.*</exclude>
+                                <exclude>**/generated/**</exclude>
                             </excludes>
                             <rules>
                                 <rule>
                                     <element>BUNDLE</element>
                                     <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.80</minimum>
+                                        </limit>
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>

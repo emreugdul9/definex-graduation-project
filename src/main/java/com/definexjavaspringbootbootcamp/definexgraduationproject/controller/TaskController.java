@@ -6,13 +6,12 @@ import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Ta
 import com.definexjavaspringbootbootcamp.definexgraduationproject.service.TaskService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/task")
+@RequestMapping("/api/task")
 @AllArgsConstructor
 public class TaskController {
 
@@ -39,14 +38,12 @@ public class TaskController {
     }
 
     @PostMapping("/changePriority/{id}")
-    @PreAuthorize("hasAuthority('TEAM_LEADER') or hasAuthority('PROJECT_MANAGER')")
     public ResponseEntity<ChangePriortyResponse> changePriority(@PathVariable UUID id, @RequestParam("priority") TaskPriority priority) {
         return ResponseEntity.ok(taskService.changeTaskPriority(id, priority));
     }
 
 
     @GetMapping("/state/{id}")
-    @PreAuthorize("hasAuthority('TEAM_LEADER') or hasAuthority('PROJECT_MANAGER')")
     public ResponseEntity<TaskState> findState(@PathVariable UUID id) {
         return ResponseEntity.ok(taskService.getTaskState(id));
     }

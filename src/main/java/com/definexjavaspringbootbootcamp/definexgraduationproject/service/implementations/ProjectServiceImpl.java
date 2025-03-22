@@ -8,6 +8,7 @@ import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.Us
 import com.definexjavaspringbootbootcamp.definexgraduationproject.exception.ProjectNotFoundException;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.mapper.ProjectMapper;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.ProjectRepository;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.TaskRepository;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.UserRepository;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.service.ProjectService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,8 +16,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ForkJoinPool;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -25,11 +28,13 @@ public class ProjectServiceImpl implements ProjectService {
     private final UserRepository userRepository;
 
     private final ProjectMapper projectMapper;
+    private final TaskRepository taskRepository;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, UserRepository userRepository, ProjectMapper projectMapper) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, UserRepository userRepository, ProjectMapper projectMapper, TaskRepository taskRepository) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.projectMapper = projectMapper;
+        this.taskRepository = taskRepository;
     }
 
     //TODO: belki bu da sadece eğer aynı departmen içindeyse getiren bi metod olabilir
@@ -68,12 +73,15 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectResponse addTaskToProject(UUID projectId, List<UUID> taskIds) {
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("Project not found"));
-        List<Task> tasks = project.getTasks();
-        for (UUID taskId : taskIds ) {
-            tasks.add(Task.builder().id(taskId).build());
+        List<Task> tasks = project.getTasks() != null ? project.getTasks() : new ArrayList<>();
+
+        List<Task> tasksToAdd = taskRepository.findAllById(taskIds);
+        for (Task task : tasksToAdd) {
+            task.setProject(project);
+            project.getTasks().add(task);
         }
-        project.setTasks(tasks);
-        projectRepository.save(project);
+
+        taskRepository.saveAll(tasks);
         return ProjectResponse.builder()
                 .message("Task added successfully")
                 .users(project.getUsers())
@@ -85,12 +93,15 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectResponse addUserToProject(UUID projectId, List<UUID> userIds) {
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("Project not found"));
-        List<User> users = project.getUsers();
-        for(UUID userId : userIds) {
-            users.add(User.builder().id(userId).build());
+        List<User> users = project.getUsers() != null ? project.getUsers() : new ArrayList<>();
+
+        List<User> usersToAdd = userRepository.findAllById(userIds);
+        for (User user : usersToAdd) {
+            user.getProject().add(project);
+            project.getUsers().add(user);
         }
-        project.setUsers(users);
-        projectRepository.save(project);
+
+        userRepository.saveAll(users);
         return ProjectResponse.builder()
                 .message("User added successfully")
                 .users(project.getUsers())

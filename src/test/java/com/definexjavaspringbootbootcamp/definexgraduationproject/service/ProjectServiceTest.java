@@ -9,6 +9,7 @@ import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.Us
 import com.definexjavaspringbootbootcamp.definexgraduationproject.exception.ProjectNotFoundException;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.mapper.ProjectMapper;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.ProjectRepository;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.TaskRepository;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.UserRepository;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.service.implementations.ProjectServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,6 +43,9 @@ class ProjectServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private TaskRepository taskRepository;
 
     @Mock
     private ProjectMapper projectMapper;

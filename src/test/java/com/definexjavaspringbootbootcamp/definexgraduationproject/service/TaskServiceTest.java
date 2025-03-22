@@ -84,7 +84,6 @@ public class TaskServiceTest {
                 .description("New Description")
                 .acceptanceCriteria("New Acceptance Criteria")
                 .priority(TaskPriority.HIGH)
-                .assignee(user)
                 .build();
 
         taskUpdateDto = TaskUpdateDto.builder()

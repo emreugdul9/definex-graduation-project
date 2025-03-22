@@ -2,7 +2,6 @@ package com.definexjavaspringbootbootcamp.definexgraduationproject.service.imple
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectResponse;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.department.Department;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.Project;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
@@ -44,8 +43,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<Project> findAllByDepartment() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Department department = userRepository.findDepartmentByUsername(username);
-        return projectRepository.findAllByDepartment(department);
+        String department = userRepository.findDepartmentByUsername(username);
+        return projectRepository.findAllByDepartmentName(department);
     }
 
     @PreAuthorize("hasAuthority('PROJECT_MANAGER')")
@@ -59,8 +58,8 @@ public class ProjectServiceImpl implements ProjectService {
                 .updated(LocalDate.now())
                 .build();
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Department department = userRepository.findDepartmentByUsername(username);
-        project.setDepartment(department);
+        String department = userRepository.findDepartmentByUsername(username);
+        project.setDepartmentName(department);
         return projectRepository.save(project);
     }
     //TODO: addUserToProject, addTaskToProject

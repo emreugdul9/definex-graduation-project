@@ -23,4 +23,6 @@ public class Comment {
     @JoinColumn(name = "task_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Task task;
+
+    private Boolean isDeleted = Boolean.FALSE;
 }

@@ -12,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -36,7 +35,7 @@ public class SecurityService {
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
 
 
-        return currentUser.getDepartment().equals(project.getDepartment());
+        return currentUser.getDepartmentName().equals(project.getDepartmentName());
     }
     public boolean isUserAndTaskSameDepartment(UUID taskId) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -44,7 +43,7 @@ public class SecurityService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException("Task not found"));
-        return currentUser.getDepartment().equals(task.getProject().getDepartment());
+        return currentUser.getDepartmentName().equals(task.getProject().getDepartmentName());
 
     }
 

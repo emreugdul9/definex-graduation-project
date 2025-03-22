@@ -1,6 +1,5 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user;
 
-import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.department.Department;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.Project;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;
 import jakarta.persistence.*;
@@ -34,11 +33,12 @@ public class User implements UserDetails {
     private UserType userType;
     @ManyToMany(mappedBy = "users")
     private List<Project> project;
-    @ManyToOne
-    @JoinColumn(name = "department_id")
-    private Department department;
+    private String departmentName;
     @OneToMany(mappedBy = "assignee")
     private List<Task> tasks;
+
+    private Boolean isDeleted = Boolean.FALSE;
+
 
 
     @Override

@@ -1,8 +1,5 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.controller;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ChangePriortyResponse;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ChangeStateResponse;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.TaskDto;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.TaskResponse;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.*;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskPriority;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskState;
@@ -54,6 +51,10 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getTaskState(id));
     }
 
+    @PostMapping("/assign/{taskId}")
+    public ResponseEntity<TaskAssignedResponse> assign(@PathVariable UUID taskId, @RequestParam("userId") UUID userId) {
+        return ResponseEntity.ok(taskService.assignTask(taskId, userId));
+    }
 
 
 

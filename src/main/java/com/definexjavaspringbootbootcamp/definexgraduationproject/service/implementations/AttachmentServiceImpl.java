@@ -10,6 +10,7 @@ import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.Att
 import com.definexjavaspringbootbootcamp.definexgraduationproject.service.AttachmentService;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.service.TaskService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +31,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     private static final String UPLOAD_DIR = "/opt/uploads";
     @Override
+    @PreAuthorize("@securityService.isUserAndTaskSameDepartment(#taskId)")
     public AttachmentResponse uploadAttachment(UUID taskId, MultipartFile file) {
         if (!taskService.doesTaskExist(taskId)){
             throw new TaskNotFoundException("Task not found");
@@ -56,6 +58,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
+    @PreAuthorize("@securityService.isUserAndTaskSameDepartment(#taskId)")
     public List<AttachmentDto> getAttachmentsByTask(UUID taskId) {
         return attachmentRepository.findByTaskIdAndIsDeletedFalse(taskId).stream()
                 .map(attachment -> AttachmentDto.builder()

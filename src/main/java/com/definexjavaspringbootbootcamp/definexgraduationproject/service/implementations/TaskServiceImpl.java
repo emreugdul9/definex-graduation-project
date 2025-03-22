@@ -40,7 +40,7 @@ public class TaskServiceImpl implements TaskService {
                 .title(taskDto.getTitle())
                 .description(taskDto.getDescription())
                 .acceptanceCriteria(taskDto.getAcceptanceCriteria())
-                .state(taskDto.getState())
+                .state(TaskState.BACKLOG)
                 .priority(taskDto.getPriority())
                 .assignee(taskDto.getAssignee())
                 .created(LocalDate.now())
@@ -52,6 +52,7 @@ public class TaskServiceImpl implements TaskService {
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .created(task.getCreated())
+                .taskState(String.valueOf(task.getState()))
                 .message("Task created successfully")
                 .build();
     }

@@ -15,6 +15,7 @@ public class TaskResponse extends Response {
 
     private String title;
     private String description;
+    private String taskState;
     private User assignee;
     private LocalDate created;
 

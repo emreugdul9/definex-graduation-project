@@ -8,6 +8,7 @@ import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.Com
 import com.definexjavaspringbootbootcamp.definexgraduationproject.service.CommentService;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.service.TaskService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class CommentServiceImpl implements CommentService {
     private final TaskService taskService;
 
     @Override
+    @PreAuthorize("@securityService.isUserAndTaskSameDepartment(#taskId)")
     public CommentResponse addComment(UUID taskId, CommentDto commentDto) {
         if (!taskService.doesTaskExist(taskId)) {
             throw new TaskNotFoundException("Task not found");
@@ -39,6 +41,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @PreAuthorize("@securityService.isUserAndTaskSameDepartment(#taskId)")
     public List<CommentDto> getCommentsByTaskId(UUID taskId) {
         List<Comment> comments = commentRepository.getCommentsByTaskId(taskId);
         return comments.stream().map(this::convertToDto).collect(Collectors.toList());

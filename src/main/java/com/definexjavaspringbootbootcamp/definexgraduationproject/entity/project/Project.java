@@ -1,6 +1,5 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project;
 
-import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.department.Department;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
 import jakarta.persistence.*;
@@ -8,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -36,10 +37,16 @@ public class Project {
     private List<Task> tasks;
     @Enumerated(EnumType.STRING)
     private ProjectState projectState;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_id", nullable = false)
-    private Department department;
-    private boolean isDeleted = Boolean.FALSE;
+    private String departmentName;
+    private boolean isDeleted;
+    @CreatedDate
+    @Column(updatable = false)
     private LocalDate created;
+    @LastModifiedDate
     private LocalDate updated;
+
+    @PrePersist
+    public void prePersist() {
+        this.isDeleted = false;
+    }
 }

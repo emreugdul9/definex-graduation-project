@@ -1,7 +1,6 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.dto;
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskPriority;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskState;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +13,6 @@ public class TaskDto {
     private String description;
     private String acceptanceCriteria;
     private TaskPriority priority;
-    private TaskState state;
     private User assignee;
 
 

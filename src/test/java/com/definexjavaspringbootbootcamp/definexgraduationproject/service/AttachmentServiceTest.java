@@ -60,7 +60,7 @@ public class AttachmentServiceTest {
 
         attachment = Attachment.builder()
                 .id(attachmentId)
-                .filePath("/opt/uploads/test_file.txt")
+                .filePath(System.getProperty("user.home") + "/uploads/test_file.txt")
                 .task(task)
                 .isDeleted(false)
                 .build();
@@ -72,7 +72,7 @@ public class AttachmentServiceTest {
                 "Test content".getBytes()
         );
 
-        mockPath = Path.of("/opt/uploads/test_file.txt");
+        mockPath = Path.of(System.getProperty("user.home") + "/uploads/test_file.txt");
     }
 
     @Test
@@ -91,7 +91,7 @@ public class AttachmentServiceTest {
 
             assertNotNull(response);
             assertEquals("File uploaded successfully", response.getMessage());
-            assertTrue(response.getFilePath().contains("/opt/uploads"));
+            assertTrue(response.getFilePath().contains(System.getProperty("user.home") + "/uploads"));
 
             verify(taskService).doesTaskExist(taskId);
             verify(attachmentRepository).save(any(Attachment.class));
@@ -135,13 +135,13 @@ public class AttachmentServiceTest {
     void getAttachmentsByTask_Success() {
         Attachment attachment1 = Attachment.builder()
                 .id(UUID.randomUUID())
-                .filePath("/opt/uploads/file1.txt")
+                .filePath(System.getProperty("user.home") + "/uploads/file1.txt")
                 .isDeleted(false)
                 .build();
 
         Attachment attachment2 = Attachment.builder()
                 .id(UUID.randomUUID())
-                .filePath("/opt/uploads/file2.txt")
+                .filePath(System.getProperty("user.home") + "/uploads/file2.txt")
                 .isDeleted(false)
                 .build();
 
@@ -153,8 +153,8 @@ public class AttachmentServiceTest {
 
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertEquals("/opt/uploads/file1.txt", result.get(0).getFilePath());
-        assertEquals("/opt/uploads/file2.txt", result.get(1).getFilePath());
+        assertEquals(System.getProperty("user.home") + "/uploads/file1.txt", result.get(0).getFilePath());
+        assertEquals(System.getProperty("user.home") + "/uploads/file2.txt", result.get(1).getFilePath());
 
         verify(attachmentRepository).findByTaskIdAndIsDeletedFalse(taskId);
     }
@@ -180,7 +180,7 @@ public class AttachmentServiceTest {
 
         assertNotNull(response);
         assertEquals("Attachment marked as deleted", response.getMessage());
-        assertEquals("/opt/uploads/test_file.txt", response.getFilePath());
+        assertEquals(System.getProperty("user.home") + "/uploads/test_file.txt", response.getFilePath());
 
         verify(attachmentRepository).findById(attachmentId);
         verify(attachmentRepository).save(attachment);

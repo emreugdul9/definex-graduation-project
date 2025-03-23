@@ -40,7 +40,7 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.update(id, projectDto));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping("/delete/{id}")
     public ResponseEntity<ProjectDto> deleteProject(@PathVariable UUID id) {
         return ResponseEntity.ok(projectService.delete(id));
     }

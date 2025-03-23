@@ -13,10 +13,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class TaskResponse extends Response {
 
+    private String id;
     private String title;
     private String description;
     private String taskState;
-    private User assignee;
+    private String assignee;
     private LocalDate created;
 
 }

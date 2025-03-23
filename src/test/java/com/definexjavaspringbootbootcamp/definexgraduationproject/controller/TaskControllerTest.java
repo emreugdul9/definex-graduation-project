@@ -3,6 +3,7 @@ package com.definexjavaspringbootbootcamp.definexgraduationproject.controller;
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.*;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.*;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.service.TaskService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +36,7 @@ class TaskControllerTest {
 
     private Task task;
     private TaskDto taskDto;
+    private FindTaskDto findTaskDto;
     private TaskResponse taskResponse;
     private UUID taskId;
     private ObjectMapper objectMapper;
@@ -55,6 +57,16 @@ class TaskControllerTest {
                 .project(UUID.randomUUID())
                 .build();
 
+        findTaskDto = FindTaskDto.builder()
+                .user(String.valueOf(userId))
+                .project(String.valueOf(UUID.randomUUID()))
+                .state(TaskState.BACKLOG)
+                .title("Test Task")
+                .acceptanceCriteria("Criteria")
+                .description("Task description")
+                .priority(TaskPriority.MEDIUM)
+                .build();
+
         task = Task.builder()
                 .id(taskId)
                 .title("Test Task")
@@ -62,14 +74,14 @@ class TaskControllerTest {
                 .acceptanceCriteria("Criteria")
                 .state(TaskState.BACKLOG)
                 .priority(TaskPriority.MEDIUM)
-                .assignee(null)
+                .assignee(User.builder().id(userId).build())
                 .build();
 
         taskResponse = TaskResponse.builder()
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .taskState(task.getState().name())
-                .assignee(task.getAssignee())
+                .assignee(String.valueOf(task.getAssignee().getId()))
                 .created(task.getCreated())
                 .message("Task created successfully")
                 .build();
@@ -77,7 +89,7 @@ class TaskControllerTest {
 
     @Test
     void findById_ShouldReturnTask() throws Exception {
-        when(taskService.findById(taskId)).thenReturn(task);
+        when(taskService.findById(taskId)).thenReturn(findTaskDto);
 
         mockMvc.perform(get("/api/task/{id}", taskId))
                 .andExpect(status().isOk())

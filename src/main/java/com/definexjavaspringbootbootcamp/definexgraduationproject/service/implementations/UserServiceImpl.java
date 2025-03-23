@@ -28,6 +28,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return UserDto.builder()
+                .id(String.valueOf(user.getId()))
                 .username(user.getUsername())
                 .departmentName(user.getDepartmentName())
                 .build();

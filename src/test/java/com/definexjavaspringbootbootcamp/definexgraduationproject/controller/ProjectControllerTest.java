@@ -200,7 +200,7 @@ class ProjectControllerTest {
 
         when(projectService.delete(projectId)).thenReturn(deletedProject);
 
-        mockMvc.perform(delete("/api/project/delete/{id}", projectId))
+        mockMvc.perform(put("/api/project/delete/{id}", projectId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.isDeleted").value(String.valueOf(true)));

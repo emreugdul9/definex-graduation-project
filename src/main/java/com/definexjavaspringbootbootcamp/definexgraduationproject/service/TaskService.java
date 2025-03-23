@@ -10,11 +10,11 @@ import java.util.UUID;
 
 public interface TaskService {
 
-    Task findById(UUID id);
+    FindTaskDto findById(UUID id);
     TaskResponse create(TaskDto taskDto);
-    Task update(UUID id, TaskUpdateDto taskUpdateDto);
+    TaskResponse update(UUID id, TaskUpdateDto taskUpdateDto);
     String delete(UUID id);
-    List<Task> getTasksByProjectId(UUID projectId);
+    List<FindTaskDto> getTasksByProjectId(UUID projectId);
     ChangeStateResponse changeTaskState(UUID taskId, TaskState state, String reason);
     ChangePriortyResponse changeTaskPriority(UUID taskId, TaskPriority priority);
     TaskAssignedResponse assignTask(UUID taskId, UUID userId);

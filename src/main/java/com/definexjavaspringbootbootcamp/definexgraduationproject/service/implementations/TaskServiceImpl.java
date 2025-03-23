@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -29,8 +30,20 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @PreAuthorize("@securityService.isUserAndTaskSameDepartment(#id)")
-    public Task findById(UUID id) {
-        return taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found"));
+    public FindTaskDto findById(UUID id) {
+
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found"));
+        return FindTaskDto.builder()
+                .acceptanceCriteria(task.getAcceptanceCriteria())
+                .description(task.getDescription())
+                .priority(task.getPriority())
+                .project(String.valueOf(task.getProject().getId()))
+                .state(task.getState())
+                .user(Optional.ofNullable(task.getAssignee())
+                        .map(assignee -> String.valueOf(assignee.getId()))
+                        .orElse("No assignee found"))
+                .title(task.getTitle())
+                .build();
     }
 
     @Override
@@ -49,7 +62,10 @@ public class TaskServiceImpl implements TaskService {
                 .build();
         taskRepository.save(task);
         return TaskResponse.builder()
-                .assignee(task.getAssignee())
+                .id(String.valueOf(task.getId()))
+                .assignee(Optional.ofNullable(task.getAssignee())
+                        .map(assignee -> String.valueOf(assignee.getId()))
+                        .orElse("No assignee found"))
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .created(task.getCreated())
@@ -61,32 +77,55 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     @PreAuthorize("(hasAuthority('TEAM_LEADER') or hasAuthority('PROJECT_MANAGER')) and @securityService.isUserAndTaskSameDepartment(#id)")
-    public Task update(UUID id, TaskUpdateDto taskUpdateDto) {
-        Task taskToUpdate = findById(id);
+    public TaskResponse update(UUID id, TaskUpdateDto taskUpdateDto) {
+        Task taskToUpdate = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found"));
         taskMapper.updateTaskFromDto(taskUpdateDto, taskToUpdate);
-        return taskRepository.save(taskToUpdate);
+        taskRepository.save(taskToUpdate);
+        return TaskResponse.builder()
+                .id(String.valueOf(taskToUpdate.getId()))
+                .taskState(String.valueOf(taskToUpdate.getState()))
+                .title(taskToUpdate.getTitle())
+                .description(taskToUpdate.getDescription())
+                .assignee(Optional.ofNullable(taskToUpdate.getAssignee())
+                        .map(assignee -> String.valueOf(assignee.getId()))
+                        .orElse("No assignee found"))
+                .message("Task updated successfully")
+        .build();
     }
 
     @Override
     @Transactional
     @PreAuthorize("(hasAuthority('TEAM_LEADER') or hasAuthority('PROJECT_MANAGER')) and @securityService.isUserAndTaskSameDepartment(#id)")
     public String delete(UUID id) {
-        Task taskToDelete = findById(id);
+        Task taskToDelete = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found"));
         taskToDelete.setDeleted(true);
         return "Task deleted successfully";
     }
 
     @Override
     @PreAuthorize("(hasAuthority('TEAM_LEADER') or hasAuthority('PROJECT_MANAGER')) and @securityService.isUserAndProjectSameDepartment(#projectId)")
-    public List<Task> getTasksByProjectId(UUID projectId) {
-        return taskRepository.findTasksByProjectId(projectId);
+    public List<FindTaskDto> getTasksByProjectId(UUID projectId) {
+        List<Task> tasks = taskRepository.findTasksByProjectId(projectId);
+        return tasks.stream()
+                .map(task -> FindTaskDto.builder()
+                        .acceptanceCriteria(task.getAcceptanceCriteria())
+                        .description(task.getDescription())
+                        .priority(task.getPriority())
+                        .title(task.getTitle())
+                        .user(Optional.ofNullable(task.getAssignee())
+                                .map(assignee -> String.valueOf(assignee.getId()))
+                                .orElse("No assignee found"))
+                        .state(task.getState())
+                        .project(String.valueOf(task.getProject().getId()))
+                        .build())
+                .toList();
     }
 
     @Override
     @Transactional
     @PreAuthorize("@securityService.isUserAndTaskSameDepartment(#taskId)")
     public ChangeStateResponse changeTaskState(UUID taskId, TaskState state, String reason) {
-        Task task = findById(taskId);
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException("Task not found"));
         if((state == TaskState.CANCELLED || state == TaskState.BLOCKED) && reason == null) {
             throw new ReasonMustBeEntered("Reason cannot be null");
         }
@@ -113,7 +152,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     @PreAuthorize("(hasAuthority('TEAM_LEADER') or hasAuthority('PROJECT_MANAGER')) and @securityService.isUserAndTaskSameDepartment(#taskId)")
     public ChangePriortyResponse changeTaskPriority(UUID taskId, TaskPriority priority){
-        Task task = findById(taskId);
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException("Task not found"));
         task.setPriority(priority);
         taskRepository.save(task);
         return ChangePriortyResponse.builder()
@@ -126,7 +165,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     @PreAuthorize("(hasAuthority('TEAM_LEADER') or hasAuthority('PROJECT_MANAGER')) and @securityService.isUserAndTaskSameDepartment(#taskId)")
     public TaskAssignedResponse assignTask(UUID taskId, UUID userId) {
-        Task task = findById(taskId);
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException("Task not found"));
         task.setAssignee(User.builder().id(userId).build());
         taskRepository.save(task);
         return TaskAssignedResponse.builder()

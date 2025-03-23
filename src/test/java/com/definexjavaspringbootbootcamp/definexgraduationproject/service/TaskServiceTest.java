@@ -73,7 +73,6 @@ public class TaskServiceTest {
                 .acceptanceCriteria("Test Acceptance Criteria")
                 .state(TaskState.BACKLOG)
                 .priority(TaskPriority.MEDIUM)
-                .assignee(user)
                 .project(project)
                 .created(LocalDate.now())
                 .updated(LocalDate.now())
@@ -97,10 +96,10 @@ public class TaskServiceTest {
     void findById_ShouldReturnTask_WhenTaskExists() {
         when(taskRepository.findById(taskId)).thenReturn(Optional.of(task));
 
-        Task result = taskService.findById(taskId);
+        FindTaskDto result = taskService.findById(taskId);
 
         assertNotNull(result);
-        assertEquals(taskId, result.getId());
+        assertEquals(task.getState(), result.getState());
         assertEquals("Test Task", result.getTitle());
         verify(taskRepository, times(1)).findById(taskId);
     }
@@ -118,11 +117,7 @@ public class TaskServiceTest {
 
     @Test
     void create_ShouldCreateTaskSuccessfully() {
-        when(taskRepository.save(any(Task.class))).thenAnswer(invocation -> {
-            Task savedTask = invocation.getArgument(0);
-            savedTask.setId(taskId);
-            return savedTask;
-        });
+        when(taskRepository.save(any(Task.class))).thenReturn(task);
 
         TaskResponse response = taskService.create(taskDto);
         assertNotNull(response);
@@ -146,12 +141,11 @@ public class TaskServiceTest {
             return null;
         }).when(taskMapper).updateTaskFromDto(eq(taskUpdateDto), any(Task.class));
 
-        Task updatedTask = taskService.update(taskId, taskUpdateDto);
+        TaskResponse updatedTask = taskService.update(taskId, taskUpdateDto);
 
         assertNotNull(updatedTask);
         assertEquals("Updated Task", updatedTask.getTitle());
         assertEquals("Updated Description", updatedTask.getDescription());
-        assertEquals("Updated Acceptance Criteria", updatedTask.getAcceptanceCriteria());
         verify(taskRepository, times(1)).findById(taskId);
         verify(taskRepository, times(1)).save(any(Task.class));
         verify(taskMapper, times(1)).updateTaskFromDto(eq(taskUpdateDto), any(Task.class));
@@ -173,11 +167,11 @@ public class TaskServiceTest {
         List<Task> tasks = Arrays.asList(task);
         when(taskRepository.findTasksByProjectId(projectId)).thenReturn(tasks);
 
-        List<Task> result = taskService.getTasksByProjectId(projectId);
+        List<FindTaskDto> result = taskService.getTasksByProjectId(projectId);
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(taskId, result.getFirst().getId());
+        assertEquals(task.getTitle(), result.getFirst().getTitle());
         verify(taskRepository, times(1)).findTasksByProjectId(projectId);
     }
 

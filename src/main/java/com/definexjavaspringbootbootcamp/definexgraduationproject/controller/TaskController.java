@@ -18,7 +18,7 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Task> findById(@PathVariable UUID id) {
+    public ResponseEntity<FindTaskDto> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(taskService.findById(id));
     }
 

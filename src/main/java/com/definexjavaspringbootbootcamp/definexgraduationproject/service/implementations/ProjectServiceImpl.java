@@ -3,7 +3,6 @@ package com.definexjavaspringbootbootcamp.definexgraduationproject.service.imple
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.CreateProjectDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectResponse;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.TaskDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.Project;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;

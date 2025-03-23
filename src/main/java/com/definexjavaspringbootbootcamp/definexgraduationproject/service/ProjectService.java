@@ -3,7 +3,6 @@ package com.definexjavaspringbootbootcamp.definexgraduationproject.service;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.CreateProjectDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectResponse;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.Project;
 
 import java.util.List;
 import java.util.UUID;

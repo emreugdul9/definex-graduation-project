@@ -2,8 +2,6 @@ package com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user;
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.Project;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

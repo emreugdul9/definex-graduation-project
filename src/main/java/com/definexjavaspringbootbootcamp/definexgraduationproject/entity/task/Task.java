@@ -4,7 +4,6 @@ import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.attachm
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.comment.Comment;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.Project;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;

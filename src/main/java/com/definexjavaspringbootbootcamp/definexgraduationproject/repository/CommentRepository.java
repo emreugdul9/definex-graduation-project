@@ -11,6 +11,6 @@ import java.util.UUID;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, UUID> {
-    @Query(nativeQuery = true, value = "SELECT c.* FROM comments c WHERE c.taskId= :taskId")
+    @Query(nativeQuery = true, value = "SELECT c.* FROM comment c WHERE c.task_id= :taskId")
     List<Comment> getCommentsByTaskId(@Param("taskId") UUID taskId);
 }

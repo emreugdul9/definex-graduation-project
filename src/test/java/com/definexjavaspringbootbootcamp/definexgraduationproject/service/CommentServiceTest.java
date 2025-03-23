@@ -82,11 +82,11 @@ class CommentServiceTest {
         CommentResponse response = commentService.addComment(taskId, commentDto);
 
         assertNotNull(response);
-        assertNotNull(response.getComment());
+        assertNotNull(response.getContent());
         assertEquals("Comment successfully added", response.getMessage());
-        assertEquals(commentDto.getContent(), response.getComment().getComment());
-        assertNotNull(response.getComment().getTask());
-        assertEquals(taskId, response.getComment().getTask().getId());
+        assertEquals(commentDto.getContent(), response.getContent());
+        assertNotNull(response.getTaskId());
+        assertEquals(taskId, response.getTaskId());
 
         verify(taskService, times(1)).doesTaskExist(taskId);
         verify(commentRepository, times(1)).save(any(Comment.class));

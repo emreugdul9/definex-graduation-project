@@ -1,5 +1,6 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.service.implementations;
 
+import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.userdto.UserDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.exception.UserNotFoundException;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.UserRepository;
@@ -23,18 +24,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(User user) {
+    public UserDto create(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        userRepository.save(user);
+        return UserDto.builder()
+                .username(user.getUsername())
+                .departmentName(user.getDepartmentName())
+                .build();
     }
 
     @Override
-    public User getUserById(UUID id) {
+    public UserDto getUserById(UUID id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()) {
             throw new UserNotFoundException("User not found");
         }
-        return user.get();
+        return UserDto.builder()
+                .username(user.get().getUsername())
+                .departmentName(user.get().getDepartmentName())
+                .build();
     }
 
     @Override

@@ -76,14 +76,6 @@ class ProjectControllerTest {
         taskId1 = UUID.randomUUID();
         taskId2 = UUID.randomUUID();
 
-        User user1 = User.builder().id(userId1).build();
-        User user2 = User.builder().id(userId2).build();
-        List<User> users = Arrays.asList(user1, user2);
-
-        Task task1 = Task.builder().id(taskId1).build();
-        Task task2 = Task.builder().id(taskId2).build();
-        List<Task> tasks = Arrays.asList(task1, task2);
-
         project = Project.builder()
                 .id(projectId)
                 .title("Test Project")
@@ -115,8 +107,8 @@ class ProjectControllerTest {
 
         projectResponse = ProjectResponse.builder()
                 .message("Success")
-                .users(users)
-                .tasks(tasks)
+                .users(userIds)
+                .tasks(taskIds)
                 .build();
     }
 
@@ -218,21 +210,4 @@ class ProjectControllerTest {
         verify(projectService, times(1)).addUserToProject(eq(projectId), anyList());
     }
 
-    @Test
-    void addTaskToProject_ShouldReturnProjectResponse() throws Exception {
-        when(projectService.addTaskToProject(eq(projectId), anyList())).thenReturn(projectResponse);
-
-        mockMvc.perform(put("/api/project/add-task/{projectId}", projectId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(taskIds)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.message").value("Success"))
-                .andExpect(jsonPath("$.users").isArray())
-                .andExpect(jsonPath("$.users", hasSize(2)))
-                .andExpect(jsonPath("$.tasks").isArray())
-                .andExpect(jsonPath("$.tasks", hasSize(2)));
-
-        verify(projectService, times(1)).addTaskToProject(eq(projectId), anyList());
-    }
 }

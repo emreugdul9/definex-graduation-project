@@ -52,6 +52,7 @@ class TaskControllerTest {
                 .description("Task description")
                 .acceptanceCriteria("Criteria")
                 .priority(TaskPriority.MEDIUM)
+                .project(UUID.randomUUID())
                 .build();
 
         task = Task.builder()
@@ -78,7 +79,7 @@ class TaskControllerTest {
     void findById_ShouldReturnTask() throws Exception {
         when(taskService.findById(taskId)).thenReturn(task);
 
-        mockMvc.perform(get("/task/{id}", taskId))
+        mockMvc.perform(get("/api/task/{id}", taskId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Test Task"));
     }
@@ -87,7 +88,7 @@ class TaskControllerTest {
     void create_ShouldReturnTaskResponse() throws Exception {
         when(taskService.create(any(TaskDto.class))).thenReturn(taskResponse);
 
-        mockMvc.perform(post("/task/create")
+        mockMvc.perform(post("/api/task/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(taskDto)))
                 .andExpect(status().isOk())
@@ -98,7 +99,7 @@ class TaskControllerTest {
     void exist_ShouldReturnBoolean() throws Exception {
         when(taskService.doesTaskExist(taskId)).thenReturn(true);
 
-        mockMvc.perform(get("/task/exist/{id}", taskId))
+        mockMvc.perform(get("/api/task/exist/{id}", taskId))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"));
     }
@@ -112,7 +113,7 @@ class TaskControllerTest {
 
         when(taskService.changeTaskState(any(UUID.class), any(TaskState.class), any(String.class))).thenReturn(response);
 
-        mockMvc.perform(post("/task/changeState/{id}", taskId)
+        mockMvc.perform(post("/api/task/changeState/{id}", taskId)
                         .param("state", "IN_PROGRESS")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString("Reason for change")))
@@ -129,7 +130,7 @@ class TaskControllerTest {
 
         when(taskService.changeTaskPriority(any(UUID.class), any(TaskPriority.class))).thenReturn(response);
 
-        mockMvc.perform(post("/task/changePriority/{id}", taskId)
+        mockMvc.perform(post("/api/task/changePriority/{id}", taskId)
                         .param("priority", "HIGH"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Priority changed to HIGH"));
@@ -139,7 +140,7 @@ class TaskControllerTest {
     void findState_ShouldReturnTaskStateAndOk() throws Exception {
 
         when(taskService.getTaskState(any(UUID.class))).thenReturn(TaskState.COMPLETED);
-        mockMvc.perform(get("/task/state/{id}", taskId))
+        mockMvc.perform(get("/api/task/state/{id}", taskId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(TaskState.COMPLETED)));
     }
@@ -154,7 +155,7 @@ class TaskControllerTest {
 
         when(taskService.assignTask(taskId, userId)).thenReturn(assignedResponse);
 
-        mockMvc.perform(post("/task/assign/{taskId}", taskId)
+        mockMvc.perform(post("/api/task/assign/{taskId}", taskId)
                         .param("userId", userId.toString()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

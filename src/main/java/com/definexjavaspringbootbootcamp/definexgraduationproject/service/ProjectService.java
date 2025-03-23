@@ -14,7 +14,6 @@ public interface ProjectService {
     Project create(ProjectDto projectDto);
     Project update(UUID id, ProjectDto projectDto);
     Project delete(UUID id);
-    ProjectResponse addTaskToProject(UUID projectId, List<UUID> taskId);
     ProjectResponse addUserToProject(UUID projectId, List<UUID> userId);
 
 }

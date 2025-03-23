@@ -2,6 +2,7 @@ package com.definexjavaspringbootbootcamp.definexgraduationproject.controller.us
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.userdto.AuthRequestDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.userdto.AuthResponseDto;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.userdto.UserDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.service.UserService;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.utils.JwtUtil;
@@ -31,9 +32,8 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user) {
-        userService.create(user);
-        return ResponseEntity.ok("User registered successfully");
+    public ResponseEntity<UserDto> register(@RequestBody User user) {
+        return ResponseEntity.ok(userService.create(user));
     }
 
     @PostMapping("/login")
@@ -50,16 +50,6 @@ public class UserController {
         String token = jwtUtil.generateToken(user.username(), userByUsername.getUserType().toString()).trim();
 
         return ResponseEntity.ok(new AuthResponseDto(token, "Login successful"));
-    }
-
-    // TODO: passwordu döndürme
-    @GetMapping("/validate")
-    public ResponseEntity<User> validateToken(@RequestHeader("Authorization") String token) {
-        String bearerToken = token.substring(7);
-        String username = jwtUtil.extractUsername(bearerToken);
-        Optional<User> userOptional = Optional.ofNullable(userService.getUserByUsername(username));
-        return userOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(403).build());
-
     }
 
 }

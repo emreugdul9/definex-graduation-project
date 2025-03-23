@@ -1,5 +1,6 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.service;
 
+import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.userdto.UserDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.UserType;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.exception.UserNotFoundException;
@@ -72,13 +73,10 @@ class UserServiceTest {
         when(passwordEncoder.encode(TEST_PASSWORD)).thenReturn(TEST_ENCODED_PASSWORD);
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
-        User result = userService.create(userToCreate);
+        UserDto result = userService.create(userToCreate);
 
         assertNotNull(result);
-        assertEquals(userId, result.getId());
         assertEquals(TEST_USERNAME, result.getUsername());
-        assertEquals(TEST_ENCODED_PASSWORD, result.getPassword());
-        assertEquals(UserType.TEAM_LEADER, result.getUserType());
         assertEquals(TEST_DEPARTMENT, result.getDepartmentName());
 
         verify(passwordEncoder, times(1)).encode(TEST_PASSWORD);
@@ -89,12 +87,11 @@ class UserServiceTest {
     void getUserById_WhenUserExists_ShouldReturnUser() {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        User foundUser = userService.getUserById(userId);
+        UserDto foundUser = userService.getUserById(userId);
 
         assertNotNull(foundUser);
-        assertEquals(userId, foundUser.getId());
         assertEquals(TEST_USERNAME, foundUser.getUsername());
-        assertEquals(TEST_PASSWORD, foundUser.getPassword());
+        assertEquals(user.getDepartmentName(), foundUser.getDepartmentName());
 
         verify(userRepository, times(1)).findById(userId);
     }

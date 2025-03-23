@@ -25,10 +25,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -62,9 +59,11 @@ class ProjectServiceTest {
     private UUID projectId;
     private Project project;
     private ProjectDto projectDto;
-    private User user;
+    private User user1;
+    private User user2;
     private List<Task> tasks;
     private List<User> users;
+    private List<UUID> userIds;
     private final String TEST_USERNAME = "testuser";
     private final String TEST_DEPARTMENT = "IT";
 
@@ -76,6 +75,27 @@ class ProjectServiceTest {
         when(authentication.getName()).thenReturn(TEST_USERNAME);
         SecurityContextHolder.setContext(securityContext);
         when(userRepository.findDepartmentByUsername(TEST_USERNAME)).thenReturn(TEST_DEPARTMENT);
+
+        projectId = UUID.randomUUID();
+        UUID userId1 = UUID.randomUUID();
+        UUID userId2 = UUID.randomUUID();
+        UUID taskId = UUID.randomUUID();
+
+        user1 = User.builder()
+                .id(userId1)
+                .username("user1")
+                .password("password")
+                .departmentName("IT")
+                .project(new ArrayList<>())
+                .build();
+
+        user2 = User.builder()
+                .id(userId2)
+                .username("user2")
+                .password("password")
+                .departmentName("IT")
+                .project(new ArrayList<>())
+                .build();
 
         project = Project.builder()
                 .id(projectId)
@@ -95,11 +115,13 @@ class ProjectServiceTest {
                 .title("Test Project")
                 .build();
 
+        userIds = Arrays.asList(userId1, userId2);
 
         tasks = new ArrayList<>();
         users = new ArrayList<>();
         project.setTasks(tasks);
         project.setUsers(users);
+
     }
 
     @Test
@@ -147,50 +169,90 @@ class ProjectServiceTest {
         verify(projectRepository, times(1)).save(any(Project.class));
     }
 
-    @Test
-    void addTaskToProject_ShouldReturnProjectResponse() {
-        UUID taskId1 = UUID.randomUUID();
-        UUID taskId2 = UUID.randomUUID();
-        List<UUID> taskIds = List.of(taskId1, taskId2);
 
+
+    @Test
+    void addUserToProject_Success() {
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
-        when(projectRepository.save(any(Project.class))).thenReturn(project);
-
-        ProjectResponse response = projectService.addTaskToProject(projectId, taskIds);
-
-        assertNotNull(response);
-        assertEquals("Task added successfully", response.getMessage());
-        assertEquals(2, project.getTasks().size());
-        verify(projectRepository, times(1)).findById(projectId);
-        verify(projectRepository, times(1)).save(project);
-    }
-
-    @Test
-    void addTaskToProject_WhenProjectNotFound_ShouldThrowProjectNotFoundException() {
-        List<UUID> taskIds = List.of(UUID.randomUUID());
-        when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
-
-        assertThrows(ProjectNotFoundException.class, () -> projectService.addTaskToProject(projectId, taskIds));
-        verify(projectRepository, times(1)).findById(projectId);
-        verify(projectRepository, never()).save(any(Project.class));
-    }
-
-    @Test
-    void addUserToProject_ShouldReturnProjectResponse() {
-        UUID userId1 = UUID.randomUUID();
-        UUID userId2 = UUID.randomUUID();
-        List<UUID> userIds = List.of(userId1, userId2);
-
-        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(userRepository.findAllById(userIds)).thenReturn(Arrays.asList(user1, user2));
         when(projectRepository.save(any(Project.class))).thenReturn(project);
 
         ProjectResponse response = projectService.addUserToProject(projectId, userIds);
 
         assertNotNull(response);
         assertEquals("User added successfully", response.getMessage());
-        assertEquals(2, project.getUsers().size());
-        verify(projectRepository, times(1)).findById(projectId);
+        assertEquals(2, response.getUsers().size());
+
+        verify(userRepository, times(1)).saveAll(Arrays.asList(user1, user2));
         verify(projectRepository, times(1)).save(project);
+
+        assertTrue(user1.getProject().contains(project));
+        assertTrue(user2.getProject().contains(project));
+        assertTrue(project.getUsers().contains(user1));
+        assertTrue(project.getUsers().contains(user2));
+    }
+
+    @Test
+    void addUserToProject_ProjectNotFound() {
+        when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
+
+        assertThrows(ProjectNotFoundException.class, () -> {
+            projectService.addUserToProject(projectId, userIds);
+        });
+
+        verify(userRepository, never()).saveAll(any());
+        verify(projectRepository, never()).save(any());
+    }
+
+    @Test
+    void addUserToProject_WithNullUsersList() {
+        project.setUsers(null);
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(userRepository.findAllById(userIds)).thenReturn(Arrays.asList(user1, user2));
+        when(projectRepository.save(any(Project.class))).thenReturn(project);
+
+        ProjectResponse response = projectService.addUserToProject(projectId, userIds);
+
+        assertNotNull(response);
+        assertNotNull(project.getUsers());
+        assertEquals(2, project.getUsers().size());
+    }
+
+    @Test
+    void addUserToProject_WithNullUserProjectList() {
+        user1.setProject(null); // Kullanıcının proje listesini null olarak ayarla
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(userRepository.findAllById(userIds)).thenReturn(Arrays.asList(user1, user2));
+        when(projectRepository.save(any(Project.class))).thenReturn(project);
+
+        ProjectResponse response = projectService.addUserToProject(projectId, userIds);
+
+        assertNotNull(response);
+        assertNotNull(user1.getProject());
+        assertTrue(user1.getProject().contains(project));
+    }
+
+    @Test
+    void addUserToProject_WithDuplicateUsers() {
+        project.getUsers().add(user1);
+        user1.getProject().add(project);
+
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(userRepository.findAllById(userIds)).thenReturn(Arrays.asList(user1, user2));
+        when(projectRepository.save(any(Project.class))).thenReturn(project);
+
+        ProjectResponse response = projectService.addUserToProject(projectId, userIds);
+
+        assertNotNull(response);
+        assertEquals(2, project.getUsers().size());
+
+        int user1Count = 0;
+        for (User user : project.getUsers()) {
+            if (user.equals(user1)) {
+                user1Count++;
+            }
+        }
+        assertEquals(1, user1Count);
     }
 
     @Test

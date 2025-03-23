@@ -35,7 +35,9 @@ public class CommentServiceImpl implements CommentService {
                 .build();
         commentRepository.save(comment);
         return CommentResponse.builder()
-                .comment(comment)
+                .commentId(comment.getId())
+                .content(commentDto.getContent())
+                .taskId(taskId)
                 .message("Comment successfully added")
                 .build();
     }

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -69,43 +70,37 @@ public class ProjectServiceImpl implements ProjectService {
     }
     //TODO: addUserToProject, addTaskToProject
 
-    @PreAuthorize("hasAuthority('PROJECT_MANAGER') and @securityService.isUserAndProjectSameDepartment(#projectId)")
-    @Override
-    public ProjectResponse addTaskToProject(UUID projectId, List<UUID> taskIds) {
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("Project not found"));
-        List<Task> tasks = project.getTasks() != null ? project.getTasks() : new ArrayList<>();
-
-        List<Task> tasksToAdd = taskRepository.findAllById(taskIds);
-        for (Task task : tasksToAdd) {
-            task.setProject(project);
-            project.getTasks().add(task);
-        }
-
-        taskRepository.saveAll(tasks);
-        return ProjectResponse.builder()
-                .message("Task added successfully")
-                .users(project.getUsers())
-                .tasks(project.getTasks())
-                .build();
-    }
 
     @PreAuthorize("hasAuthority('PROJECT_MANAGER') and @securityService.isUserAndProjectSameDepartment(#projectId)")
     @Override
     public ProjectResponse addUserToProject(UUID projectId, List<UUID> userIds) {
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("Project not found"));
-        List<User> users = project.getUsers() != null ? project.getUsers() : new ArrayList<>();
+        if (project.getUsers() == null) {
+            project.setUsers(new ArrayList<>());
+        }
 
         List<User> usersToAdd = userRepository.findAllById(userIds);
         for (User user : usersToAdd) {
-            user.getProject().add(project);
-            project.getUsers().add(user);
+
+            if (user.getProject() == null){
+                user.setProject(new ArrayList<>());
+            }
+
+            if (!user.getProject().contains(project)){
+                user.getProject().add(project);
+            }
+
+            if (!project.getUsers().contains(user)){
+                project.getUsers().add(user);
+            }
         }
 
-        userRepository.saveAll(users);
+        userRepository.saveAll(usersToAdd);
+        projectRepository.save(project);
         return ProjectResponse.builder()
                 .message("User added successfully")
-                .users(project.getUsers())
-                .tasks(project.getTasks())
+                .users(project.getUsers().stream().map(User::getId).collect(Collectors.toList()))
+                .tasks(project.getTasks().stream().map(Task::getId).collect(Collectors.toList()))
                 .build();
     }
 

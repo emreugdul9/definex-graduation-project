@@ -127,11 +127,12 @@
                         </goals>
                         <configuration>
                             <excludes>
-                                <exclude>**/dto.*</exclude>
-                                <exclude>**/exception.*</exclude>
-                                <exclude>**/entity/*.*</exclude>
-                                <exclude>**/configuration.*</exclude>
+                                <exclude>**/dto/**/*</exclude>
+                                <exclude>**/exception/*</exclude>
+                                <exclude>**/entity/**/*</exclude>
+                                <exclude>**/configuration/*</exclude>
                                 <exclude>**/generated/**</exclude>
+                                <exclude>**/mapper/*</exclude>
                             </excludes>
                             <rules>
                                 <rule>

@@ -1,5 +1,6 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.service;
 
+import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.CreateProjectDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectResponse;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.Project;
@@ -59,6 +60,7 @@ class ProjectServiceTest {
     private UUID projectId;
     private Project project;
     private ProjectDto projectDto;
+    private CreateProjectDto createProjectDto;
     private User user1;
     private User user2;
     private List<Task> tasks;
@@ -108,11 +110,20 @@ class ProjectServiceTest {
                 .isDeleted(false)
                 .build();
 
-        projectDto = ProjectDto.builder()
+        createProjectDto = CreateProjectDto.builder()
                 .department(TEST_DEPARTMENT)
                 .description("Test Description")
                 .projectState(ProjectState.IN_PROGRESS)
                 .title("Test Project")
+                .build();
+
+        projectDto = ProjectDto.builder()
+                .title("Test Project")
+                .description("Test Description")
+                .projectState(ProjectState.IN_PROGRESS)
+                .department("IT")
+                .updated(String.valueOf(LocalDate.now()))
+                .users(Arrays.asList(userId1, userId2))
                 .build();
 
         userIds = Arrays.asList(userId1, userId2);
@@ -128,10 +139,9 @@ class ProjectServiceTest {
     void findById_WhenProjectExists_ShouldReturnProject() {
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
 
-        Project foundProject = projectService.findById(projectId);
+        ProjectDto foundProject = projectService.findById(projectId);
 
         assertNotNull(foundProject);
-        assertEquals(projectId, foundProject.getId());
         assertEquals("Test Project", foundProject.getTitle());
         verify(projectRepository, times(1)).findById(projectId);
     }
@@ -149,7 +159,7 @@ class ProjectServiceTest {
         List<Project> projectList = List.of(project);
         when(projectRepository.findAllByDepartmentName(TEST_DEPARTMENT)).thenReturn(projectList);
 
-        List<Project> result = projectService.findAllByDepartment();
+        List<ProjectDto> result = projectService.findAllByDepartment();
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -161,11 +171,11 @@ class ProjectServiceTest {
     void create_ShouldReturnCreatedProject() {
         when(projectRepository.save(any(Project.class))).thenReturn(project);
 
-        Project createdProject = projectService.create(projectDto);
+        CreateProjectDto createdProject = projectService.create(createProjectDto);
 
         assertNotNull(createdProject);
         assertEquals("Test Project", createdProject.getTitle());
-        assertEquals(TEST_DEPARTMENT, createdProject.getDepartmentName());
+        assertEquals(TEST_DEPARTMENT, createdProject.getDepartment());
         verify(projectRepository, times(1)).save(any(Project.class));
     }
 
@@ -220,7 +230,7 @@ class ProjectServiceTest {
 
     @Test
     void addUserToProject_WithNullUserProjectList() {
-        user1.setProject(null); // Kullanıcının proje listesini null olarak ayarla
+        user1.setProject(null); // Kullanıcının proje listesini null olarak ayarla(emin değilim düzeltilebilir)
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(userRepository.findAllById(userIds)).thenReturn(Arrays.asList(user1, user2));
         when(projectRepository.save(any(Project.class))).thenReturn(project);
@@ -267,16 +277,16 @@ class ProjectServiceTest {
 
     @Test
     void update_ShouldReturnUpdatedProject() {
-        ProjectDto updatedProjectDto = ProjectDto.builder()
+        CreateProjectDto updatedProjectDto = CreateProjectDto.builder()
                 .title("Updated Project Title")
                 .description("Updated Description")
                 .projectState(ProjectState.COMPLETED)
                 .build();
 
-        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.ofNullable(project));
 
         doAnswer(invocation -> {
-            ProjectDto dto = invocation.getArgument(0);
+            CreateProjectDto dto = invocation.getArgument(0);
             Project targetProject = invocation.getArgument(1);
 
             if (dto.getTitle() != null) targetProject.setTitle(dto.getTitle());
@@ -285,18 +295,18 @@ class ProjectServiceTest {
             targetProject.setUpdated(LocalDate.now());
 
             return null;
-        }).when(projectMapper).updateProjectFromDto(any(ProjectDto.class), any(Project.class));
+        }).when(projectMapper).updateProjectFromDto(any(CreateProjectDto.class), any(Project.class));
 
         when(projectRepository.save(any(Project.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
 
-        Project updatedProject = projectService.update(projectId, updatedProjectDto);
+        ProjectDto updatedProject = projectService.update(projectId, updatedProjectDto);
 
         assertNotNull(updatedProject);
         assertEquals("Updated Project Title", updatedProject.getTitle());
         assertEquals("Updated Description", updatedProject.getDescription());
         assertEquals(ProjectState.COMPLETED, updatedProject.getProjectState());
-        assertEquals(TEST_DEPARTMENT, updatedProject.getDepartmentName());
+        assertEquals(TEST_DEPARTMENT, updatedProject.getDepartment());
 
         verify(projectRepository, times(1)).findById(projectId);
         verify(projectMapper, times(1)).updateProjectFromDto(eq(updatedProjectDto), eq(project));
@@ -306,25 +316,25 @@ class ProjectServiceTest {
     @Test
     void update_WithPartialData_ShouldOnlyUpdateProvidedFields() {
 
-        ProjectDto partialUpdateDto = ProjectDto.builder()
+        CreateProjectDto partialUpdateDto = CreateProjectDto.builder()
                 .title("Updated Title")
                 .build();
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
 
         doAnswer(invocation -> {
-            ProjectDto dto = invocation.getArgument(0);
+            CreateProjectDto dto = invocation.getArgument(0);
             Project targetProject = invocation.getArgument(1);
 
             if (dto.getTitle() != null) targetProject.setTitle(dto.getTitle());
             targetProject.setUpdated(LocalDate.now());
 
             return null;
-        }).when(projectMapper).updateProjectFromDto(any(ProjectDto.class), any(Project.class));
+        }).when(projectMapper).updateProjectFromDto(any(CreateProjectDto.class), any(Project.class));
 
         when(projectRepository.save(any(Project.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Project updatedProject = projectService.update(projectId, partialUpdateDto);
+        ProjectDto updatedProject = projectService.update(projectId, partialUpdateDto);
 
         assertNotNull(updatedProject);
         assertEquals("Updated Title", updatedProject.getTitle());
@@ -340,7 +350,7 @@ class ProjectServiceTest {
     void update_WhenProjectNotFound_ShouldThrowProjectNotFoundException() {
         when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
 
-        assertThrows(ProjectNotFoundException.class, () -> projectService.update(projectId, projectDto));
+        assertThrows(ProjectNotFoundException.class, () -> projectService.update(projectId, createProjectDto));
         verify(projectRepository, times(1)).findById(projectId);
         verify(projectRepository, never()).save(any(Project.class));
     }
@@ -349,9 +359,9 @@ class ProjectServiceTest {
     void delete_ShouldMarkProjectAsDeleted() {
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
 
-        Project deletedProject = projectService.delete(projectId);
+        ProjectDto deletedProject = projectService.delete(projectId);
 
-        assertTrue(deletedProject.isDeleted());
+        assertTrue(Boolean.parseBoolean(deletedProject.getIsDeleted()));
         verify(projectRepository, times(1)).findById(projectId);
     }
 

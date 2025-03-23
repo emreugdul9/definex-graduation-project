@@ -1,6 +1,6 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.mapper;
 
-import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectDto;
+import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.CreateProjectDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.Project;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -11,6 +11,6 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface ProjectMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateProjectFromDto(ProjectDto projectDto, @MappingTarget Project project);
+    void updateProjectFromDto(CreateProjectDto projectDto, @MappingTarget Project project);
 
 }

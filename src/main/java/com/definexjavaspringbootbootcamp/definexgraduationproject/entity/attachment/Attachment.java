@@ -19,9 +19,14 @@ public class Attachment {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String filePath;
-    private boolean isDeleted = Boolean.FALSE;
+    private boolean isDeleted;
 
     @JoinColumn(name = "task_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Task task;
+
+    @PrePersist
+    public void prePersist() {
+        this.isDeleted = false;
+    }
 }

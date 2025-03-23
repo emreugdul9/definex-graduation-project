@@ -1,8 +1,8 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.controller;
 
+import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.CreateProjectDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectDto;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectResponse;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.Project;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.service.ProjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,27 +21,27 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Project> getProject(@PathVariable UUID id) {
+    public ResponseEntity<ProjectDto> getProject(@PathVariable UUID id) {
         return ResponseEntity.ok(projectService.findById(id));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Project>> getAllProjects() {
+    public ResponseEntity<List<ProjectDto>> getAllProjects() {
         return ResponseEntity.ok(projectService.findAllByDepartment());
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Project> createProject(@RequestBody ProjectDto projectDto) {
+    public ResponseEntity<CreateProjectDto> createProject(@RequestBody CreateProjectDto projectDto) {
         return ResponseEntity.ok(projectService.create(projectDto));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Project> updateProject(@PathVariable UUID id,@RequestBody ProjectDto projectDto) {
+    public ResponseEntity<ProjectDto> updateProject(@PathVariable UUID id,@RequestBody CreateProjectDto projectDto) {
         return ResponseEntity.ok(projectService.update(id, projectDto));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Project> deleteProject(@PathVariable UUID id) {
+    public ResponseEntity<ProjectDto> deleteProject(@PathVariable UUID id) {
         return ResponseEntity.ok(projectService.delete(id));
     }
 

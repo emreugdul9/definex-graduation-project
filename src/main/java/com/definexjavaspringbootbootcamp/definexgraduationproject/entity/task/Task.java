@@ -45,8 +45,13 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
-    private boolean isDeleted = Boolean.FALSE;
+    private boolean isDeleted;
     private LocalDate created;
     private LocalDate updated;
+
+    @PrePersist
+    public void prePersist() {
+        this.isDeleted = false;
+    }
 
 }

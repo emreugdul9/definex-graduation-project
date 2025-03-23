@@ -24,5 +24,10 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Task task;
 
-    private Boolean isDeleted = Boolean.FALSE;
+    private Boolean isDeleted;
+
+    @PrePersist
+    public void prePersist() {
+        this.isDeleted = false;
+    }
 }

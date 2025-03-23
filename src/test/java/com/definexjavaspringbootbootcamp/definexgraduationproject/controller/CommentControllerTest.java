@@ -117,7 +117,7 @@ public class CommentControllerTest {
     void addComment_InvalidJson() throws Exception {
         mockMvc.perform(post("/api/comment/addComment/{id}", taskId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{invalid json}"))
+                        .content("\"INVALID\" \"JSON\""))
                 .andExpect(status().isBadRequest());
     }
 

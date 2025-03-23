@@ -39,7 +39,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "assignee")
     private List<Task> tasks;
 
-    private Boolean isDeleted = Boolean.FALSE;
+    private Boolean isDeleted;
+
+    @PrePersist
+    public void prePersist() {
+        this.isDeleted = false;
+    }
 
 
 

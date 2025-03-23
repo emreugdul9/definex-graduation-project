@@ -16,6 +16,6 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
     @Query(nativeQuery = true, value = "SELECT t.* FROM task t WHERE t.projectId= :projectId")
     List<Task> findTasksByProjectId(@Param("projectId") UUID projectId);
 
-    @Query(nativeQuery = true, value = "SELECT t.task_state FROM task t WHERE t.id= :taskId")
+    @Query(nativeQuery = true, value = "SELECT t.state FROM task t WHERE t.id= :taskId")
     TaskState findTaskStateById(@Param("taskId") UUID taskId);
 }

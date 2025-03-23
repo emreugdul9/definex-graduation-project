@@ -13,6 +13,7 @@ import java.util.UUID;
 @Builder
 public class ProjectDto {
 
+    private String id;
     private String title;
     private String description;
     private ProjectState projectState;

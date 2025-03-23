@@ -117,6 +117,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     private ProjectDto getProjectDto(Project project) {
         return ProjectDto.builder()
+                .id(String.valueOf(project.getId()))
                 .title(project.getTitle())
                 .description(project.getDescription())
                 .projectState(project.getProjectState())

@@ -55,7 +55,7 @@ class AttachmentControllerTest {
         );
 
         AttachmentResponse response = AttachmentResponse.builder()
-                .filePath("/opt/uploads/some-uuid_test.txt")
+                .filePath(System.getProperty("user.home") + "/uploads/some-uuid_test.txt")
                 .message("File uploaded successfully")
                 .build();
 
@@ -65,18 +65,18 @@ class AttachmentControllerTest {
         mockMvc.perform(multipart("/api/attachment/upload/{id}", taskId)
                         .file(file))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.filePath").value("/opt/uploads/some-uuid_test.txt"))
+                .andExpect(jsonPath("$.filePath").value(System.getProperty("user.home") + "/uploads/some-uuid_test.txt"))
                 .andExpect(jsonPath("$.message").value("File uploaded successfully"));
     }
 
     @Test
     void getAllAttachments_ShouldReturnListOfAttachments() throws Exception {
         AttachmentDto attachment1 = AttachmentDto.builder()
-                .filePath("/opt/uploads/file1.txt")
+                .filePath(System.getProperty("user.home") + "/uploads/file1.txt")
                 .build();
 
         AttachmentDto attachment2 = AttachmentDto.builder()
-                .filePath("/opt/uploads/file2.txt")
+                .filePath(System.getProperty("user.home") + "/uploads/file2.txt")
                 .build();
 
         List<AttachmentDto> attachments = Arrays.asList(attachment1, attachment2);
@@ -85,14 +85,14 @@ class AttachmentControllerTest {
 
         mockMvc.perform(get("/api/attachment/getAll/{id}", taskId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].filePath").value("/opt/uploads/file1.txt"))
-                .andExpect(jsonPath("$[1].filePath").value("/opt/uploads/file2.txt"));
+                .andExpect(jsonPath("$[0].filePath").value(System.getProperty("user.home") + "/uploads/file1.txt"))
+                .andExpect(jsonPath("$[1].filePath").value(System.getProperty("user.home") + "/uploads/file2.txt"));
     }
 
     @Test
     void deleteAttachment_ShouldReturnSuccess() throws Exception {
         AttachmentResponse response = AttachmentResponse.builder()
-                .filePath("/opt/uploads/file-to-delete.txt")
+                .filePath(System.getProperty("user.home") + "/uploads/file-to-delete.txt")
                 .message("Attachment marked as deleted")
                 .build();
 
@@ -100,7 +100,7 @@ class AttachmentControllerTest {
 
         mockMvc.perform(delete("/api/attachment/delete/{id}", attachmentId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.filePath").value("/opt/uploads/file-to-delete.txt"))
+                .andExpect(jsonPath("$.filePath").value(System.getProperty("user.home") + "/uploads/file-to-delete.txt"))
                 .andExpect(jsonPath("$.message").value("Attachment marked as deleted"));
     }
 }

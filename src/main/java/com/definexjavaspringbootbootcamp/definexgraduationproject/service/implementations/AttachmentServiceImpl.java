@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +30,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     private final AttachmentRepository attachmentRepository;
     private final TaskService taskService;
 
-    private static final String UPLOAD_DIR = "/opt/uploads";
+    private static final String UPLOAD_DIR = System.getProperty("user.home") + "/uploads";
     @Override
     @PreAuthorize("@securityService.isUserAndTaskSameDepartment(#taskId)")
     public AttachmentResponse uploadAttachment(UUID taskId, MultipartFile file) {
@@ -37,6 +38,10 @@ public class AttachmentServiceImpl implements AttachmentService {
             throw new TaskNotFoundException("Task not found");
         }
         try {
+            Path uploadPath = Paths.get(UPLOAD_DIR);
+            if (!Files.exists(uploadPath)){
+                Files.createDirectory(uploadPath);
+            }
             String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
             Path filePath = Path.of(UPLOAD_DIR, fileName);
 

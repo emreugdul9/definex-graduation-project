@@ -1,7 +1,6 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.service;
 
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.*;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskPriority;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.TaskState;
 

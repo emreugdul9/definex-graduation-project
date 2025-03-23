@@ -5,7 +5,6 @@ import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Ta
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.UUID;
 
 @Data
 @Builder

@@ -4,8 +4,6 @@ import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectDto
 import com.definexjavaspringbootbootcamp.definexgraduationproject.dto.ProjectResponse;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.Project;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.project.ProjectState;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.task.Task;
-import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.user.User;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.ProjectRepository;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.TaskRepository;
 import com.definexjavaspringbootbootcamp.definexgraduationproject.repository.UserRepository;
@@ -21,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;

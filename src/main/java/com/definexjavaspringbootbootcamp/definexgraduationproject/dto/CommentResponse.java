@@ -1,6 +1,5 @@
 package com.definexjavaspringbootbootcamp.definexgraduationproject.dto;
 
-import com.definexjavaspringbootbootcamp.definexgraduationproject.entity.comment.Comment;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
